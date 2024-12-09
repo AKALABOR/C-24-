@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+const int a = 9;
+int A[a];
+int b = 0;
+
+cout << "Введіть 9 елементів масиву " << endl;
+for (int i = 0; i < a; i++) {
+    cin >> A[i];
+}
+
+for (int i = 0; i < a; i++) {
+    if (A[i] % 2 != 0) {
+        b++;
+    }
+}
+cout << "Кількість непарних елементів " << b << endl;
+
+}
