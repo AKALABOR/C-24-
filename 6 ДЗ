@@ -1,0 +1,151 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX_TRANSACTIONS = 15;
+
+struct Transaction {
+    double amount;
+    string date;
+    string type;
+    string category;
+
+void print() const {
+    cout << "Сума = " << amount << ", Дата = " << date << ", Тип = " << type << ", Категорія = " << category << endl;
+    }
+};
+
+bool isValidDate(const string& date) {
+    if (date.size() != 10 || date[4] != '-' || date[7] != '-') return false;
+    string year = date.substr(0, 4);
+    string month = date.substr(5, 2);
+    string day = date.substr(8, 2);
+
+for (char c : year + month + day) {
+    if (!isdigit(c)) return false;
+}
+
+int y = stoi(year), m = stoi(month), d = stoi(day);
+if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+if ((m == 4 || m == 6 || m == 9 || m == 11) && d > 30) return false;
+if (m == 2) {
+    bool isLeap = (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0));
+    if (d > 29 || (!isLeap && d > 28)) return false;
+}
+
+return true;
+}
+
+void menu() {
+
+cout << "Система обліку фінансових транзакцій\n" << endl;
+cout << "1) Додати нову транзакцію\n" << endl;
+cout << "2) Вивести всі транзакції\n" << endl;
+cout << "3) Фільтрувати транзакції\n" << endl;
+cout << "4) Вийти\n" << endl;
+cout << "Виберіть опцію: " << endl;
+}
+
+int main() {
+
+Transaction transactions[MAX_TRANSACTIONS];
+int transactionCount = 0;
+int choice;
+
+do {
+    menu();
+    cin >> choice;
+
+switch (choice) {
+case 1: {
+    if (transactionCount >= MAX_TRANSACTIONS) {
+        cout << "Масив транзакцій заповнено\n" << endl;
+        break;
+    }
+Transaction t;
+cout << "Введіть суму транзакції " << endl;
+cin >> t.amount;
+
+cout << "Введіть дату транзакції (YYYY-MM-DD) " << endl;
+cin >> t.date;
+while (!isValidDate(t.date)) {
+    cout << "Неправильний формат дати " << endl;
+    cin >> t.date;
+}
+
+cout << "Введіть тип транзакції (доходи/витрати) - " << endl;
+cin >> t.type;
+cout << "Введіть категорію транзакції - ";
+cin >> t.category;
+
+transactions[transactionCount++] = t;
+cout << "Транзакція додана\n" << endl;
+break;
+}
+
+case 2: {
+
+cout << "Список транзакцій:\n" << endl;
+for (int i = 0; i < transactionCount; ++i) {
+    cout << i + 1 << endl;
+    transactions[i].print();
+}
+break;
+}
+
+case 3: {
+
+int filterChoice;
+cout << "Фільтрація транзакцій:\n" << endl;
+cout << "1) За датою\n" << endl;
+cout << "2) За типом\n" << endl;
+cout << "3) За категорією\n" << endl;
+cout << "Виберіть опцію: " << endl;
+cin >> filterChoice;
+
+if (filterChoice == 1) {
+    string filterDate;
+    cout << "Введіть дату для фільтрації (YYYY-MM-DD) - " << endl;
+    cin >> filterDate;
+    cout << "Транзакції за датою " << filterDate << ":\n";
+    for (int i = 0; i < transactionCount; ++i) {
+    if (transactions[i].date == filterDate) {
+        transactions[i].print();
+        }
+    }
+} else if (filterChoice == 2) {
+    string filterType;
+    cout << "Введіть тип для фільтрації (доходи/витрати) - " << endl;
+    cin >> filterType;
+    cout << "Транзакції за типом " << filterType << ":\n";
+    for (int i = 0; i < transactionCount; ++i) {
+    if (transactions[i].type == filterType) {
+        transactions[i].print();
+    }
+}
+} else if (filterChoice == 3) {
+    string filterCategory;
+    cout << "Введіть категорію для фільтрації - " << endl;
+    cin >> filterCategory;
+    cout << "Транзакції за категорією " << filterCategory << ":\n" << endl;
+    for (int i = 0; i < transactionCount; ++i) {
+    if (transactions[i].category == filterCategory) {
+        transactions[i].print();
+    }
+}
+} else {
+    cout << "Помилка вибору\n" << endl;
+}
+break;
+}
+
+case 4:
+
+cout << "Вихід з програми\n" << endl;
+break;
+default:
+cout << "Неправильний вибір\n" << endl;
+}
+} while (choice != 4);
+
+}
